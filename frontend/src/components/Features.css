@@ -1,0 +1,412 @@
+/* =========================================================
+   Features / Services Section
+   Scroll-triggered entrance animations + sticky card stack
+   Theme: Silky deep burgundy · #ff3b2e accent
+   ========================================================= */
+
+/* ── Section wrapper — scroll track ─────────────────────── */
+.features-section {
+  height: 300vh;
+  position: relative;
+  background:
+    radial-gradient(ellipse 80% 60% at 30% 40%, rgba(120, 10, 20, 0.55) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 70% 70%, rgba(90, 5, 15, 0.4) 0%, transparent 65%),
+    linear-gradient(160deg, #6b0e1e 0%, #4a0810 40%, #3a050d 70%, #5c0a18 100%);
+}
+
+/* Silk sheen overlay */
+.features-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(255,255,255,0.03) 0%,
+    transparent 45%,
+    rgba(255,255,255,0.02) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* =========================================================
+   1. Red Sweep Transition Bar
+   ========================================================= */
+.features-transition-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #ff3b2e;
+  transform-origin: left center;
+  transform: scaleX(0);
+  z-index: 100;
+  will-change: transform;
+}
+
+/* Triggered by JS adding .sweep */
+.features-transition-bar.sweep {
+  animation: fvBarSweep 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+@keyframes fvBarSweep {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ── Sticky viewport ─────────────────────────────────────── */
+.features-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(24px, 4vw, 64px);
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* =========================================================
+   2. Section Header — Eyebrow + Curtain Title
+   ========================================================= */
+.features-header {
+  width: 100%;
+  max-width: 980px;
+  margin-bottom: clamp(28px, 3.5vh, 52px);
+  position: relative;
+  z-index: 10;
+}
+
+/* Eyebrow — starts hidden, fades up */
+.fv-label {
+  opacity: 0;
+  transform: translateY(10px);
+  will-change: opacity, transform;
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.fv-label.fv-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.features-label {
+  margin: 0 0 10px;
+  font-family: "JetBrains Mono", "Inter", monospace;
+  font-size: clamp(9px, 0.7vw, 11px);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #ff3b2e;
+  font-weight: 400;
+}
+
+/* Clip mask for curtain reveal */
+.features-title-clip {
+  overflow: hidden;
+}
+
+/* Title — starts translated down (behind clip), slides up */
+.fv-title {
+  transform: translateY(110%);
+  will-change: transform;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fv-title.fv-visible {
+  transform: translateY(0);
+}
+
+.features-title {
+  margin: 0;
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(38px, 5.5vw, 76px);
+  color: #fff;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-shadow:
+    0 2px 20px rgba(0,0,0,0.5),
+    0 0 60px rgba(180,20,30,0.18);
+}
+
+/* ── Card Stack Container ─────────────────────────────────── */
+.features-stack {
+  position: relative;
+  width: 100%;
+  max-width: 980px;
+  height: clamp(220px, 38vh, 320px);
+}
+
+/* =========================================================
+   3. Individual Feature Card
+   ========================================================= */
+.feature-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  border-radius: 18px;
+  overflow: hidden;
+  will-change: transform, filter;
+  background: #141414;
+  box-shadow:
+    0 4px 6px rgba(0,0,0,0.35),
+    0 12px 32px rgba(0,0,0,0.55),
+    0 32px 72px rgba(0,0,0,0.4),
+    0 0 0 1px rgba(255,255,255,0.04);
+}
+
+/* Card-specific top-edge glow */
+.feature-card--1 { box-shadow: 0 4px 6px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.55), 0 32px 72px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04), 0 -1px 0 rgba(232,0,28,0.25) inset; }
+.feature-card--2 { box-shadow: 0 4px 6px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.55), 0 32px 72px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04), 0 -1px 0 rgba(220,20,40,0.2) inset; }
+.feature-card--3 { box-shadow: 0 4px 6px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.55), 0 32px 72px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04), 0 -1px 0 rgba(200,10,25,0.2) inset; }
+
+/* ── Card 1 entrance fade-in ─────────────────────────────── */
+/* Card 1 starts invisible and fades + rises when section enters */
+.feature-card.fv-card-init {
+  opacity: 0;
+  transform: translateY(40px) !important;
+  will-change: opacity, transform;
+}
+
+.feature-card.fv-card-init.fv-card-in {
+  animation: fvCardEntrance 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fvCardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(40px) !important;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) !important;
+  }
+}
+
+/* =========================================================
+   4. Red Left-Edge Accent Line (draws top→bottom on entrance)
+   ========================================================= */
+.feature-card__line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2.5px;
+  height: 0;
+  background: linear-gradient(to bottom, #ff3b2e, rgba(232, 0, 28, 0.3));
+  border-radius: 0 0 2px 2px;
+  z-index: 5;
+  will-change: height;
+}
+
+.feature-card__line.fv-line-draw {
+  animation: fvLineDraw 0.6s ease-in-out forwards;
+}
+
+@keyframes fvLineDraw {
+  from { height: 0; }
+  to   { height: 100%; }
+}
+
+/* ── Left: Text content ──────────────────────────────────── */
+.feature-card__content {
+  position: relative;
+  flex: 0 0 48%;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(28px, 3.5vw, 48px) clamp(24px, 3vw, 44px);
+  z-index: 2;
+}
+
+/* Large italic number — watermark */
+.feature-card__num {
+  position: absolute;
+  top: clamp(16px, 2.5vw, 28px);
+  right: clamp(16px, 2.5vw, 28px);
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(52px, 7vw, 88px);
+  font-weight: 700;
+  color: rgba(255,255,255,0.08);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.feature-card__icon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: clamp(16px, 2.5vh, 28px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-card__title {
+  margin: 0 0 clamp(10px, 1.5vh, 16px);
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(18px, 2vw, 26px);
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.feature-card__desc {
+  margin: 0 0 auto;
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: clamp(12px, 1vw, 15px);
+  color: rgba(255,255,255,0.58);
+  line-height: 1.65;
+  max-width: 30ch;
+}
+
+/* ── Tags ────────────────────────────────────────────────── */
+.feature-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: clamp(20px, 2.5vh, 32px);
+}
+
+.feature-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: rgba(232,0,28,0.10);
+  border: 1px solid rgba(232,0,28,0.30);
+  color: rgba(255,255,255,0.75);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: clamp(10px, 0.75vw, 12px);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  cursor: default;
+}
+
+.feature-tag:hover {
+  background: rgba(232,0,28,0.22);
+  border-color: rgba(232,0,28,0.55);
+}
+
+/* ── Right: Image panel ──────────────────────────────────── */
+.feature-card__visual {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Gradient blending left content into image */
+.feature-card__visual-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #141414 0%,
+    rgba(20,20,20,0.6) 20%,
+    rgba(20,20,20,0.08) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* =========================================================
+   Mobile — graceful degradation
+   ========================================================= */
+@media (max-width: 768px) {
+  .features-section {
+    height: auto;
+    padding: 60px 0 80px;
+    background: linear-gradient(160deg, #6b0e1e 0%, #4a0810 40%, #3a050d 70%, #5c0a18 100%);
+  }
+
+  .features-sticky {
+    position: static;
+    height: auto;
+    display: block;
+    padding: 0 20px;
+  }
+
+  .features-header {
+    margin-bottom: 32px;
+  }
+
+  .features-stack {
+    position: static;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* On mobile all cards visible, fade-up with stagger */
+  .feature-card {
+    position: static;
+    flex-direction: column;
+    height: auto;
+    min-height: 320px;
+    /* Override any JS-set transforms */
+    transform: translateY(30px) !important;
+    filter: none !important;
+    opacity: 0;
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .feature-card.fv-card-init {
+    transform: translateY(30px) !important;
+    opacity: 0;
+    animation: none;
+  }
+
+  .feature-card.is-visible,
+  .feature-card.fv-card-init.fv-card-in {
+    opacity: 1;
+    transform: translateY(0) !important;
+    animation: none;
+  }
+
+  .feature-card__content {
+    flex: none;
+    padding: 28px 24px 20px;
+  }
+
+  .feature-card__visual {
+    height: 180px;
+    flex: none;
+  }
+
+  .feature-card__num { font-size: 56px; }
+}
+
+@media (max-width: 480px) {
+  .features-title { font-size: 36px; }
+  .feature-card__title { font-size: 18px; }
+  .feature-card__visual { height: 140px; }
+}
+
+/* =========================================================
+   Reduced-motion: skip animations, show elements instantly
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .features-transition-bar.sweep { animation: none; transform: scaleX(1); }
+  .fv-label  { opacity: 1; transform: none; transition: none; }
+  .fv-title  { transform: none; transition: none; }
+  .feature-card.fv-card-init { opacity: 1; transform: none !important; animation: none; }
+  .feature-card__line.fv-line-draw { animation: none; height: 100%; }
+}
