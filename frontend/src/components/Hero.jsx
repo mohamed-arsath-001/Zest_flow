@@ -176,15 +176,10 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Bottom-center CTA + Scroll Hint */}
-      <div className="hero-btn-container anim-fade-up" style={{ animationDelay: "2.4s" }}>
-        <button className="hero-btn">
-          Book a consulting
-        </button>
-        <div className="scroll-hint">
-          <span className="scroll-hint__arrow">↓</span>
-        </div>
-      </div>
+      {/* Bottom-left Consulting Button (Reverted) */}
+      <button className="btn hero-btn anim-fade-up" style={{ animationDelay: "2.4s" }}>
+        Book a consulting
+      </button>
     </section>
   );
 };

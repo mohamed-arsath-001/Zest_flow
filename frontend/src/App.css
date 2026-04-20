@@ -701,62 +701,75 @@ body,
 }
 
 /* =========================================================
-   Consulting Button — Bottom Center Redesign
+   Consulting Button — Bottom Left
    ========================================================= */
-.hero-btn-container {
-  position: absolute;
-  bottom: clamp(40px, 8vh, 100px);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+.hero-btn {
+  position: absolute !important;
+  left: clamp(24px, 4vw, 60px);
+  bottom: clamp(24px, 6vh, 60px);
+  top: auto !important;
+  right: auto !important;
   z-index: 100;
 }
 
-.hero-btn {
+.btn {
   font-size: clamp(12px, 0.95vw, 14px);
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 14px 32px;
+  border: none;
+  padding: 1.1em 1.8em;
   color: #fff;
   text-transform: uppercase;
   font-family: "Inter", sans-serif;
   font-weight: 600;
   letter-spacing: 0.15em;
-  border-radius: 100px;
-  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  transition: 0.5s ease;
   cursor: none;
-  backdrop-filter: blur(10px);
 }
 
-.hero-btn:hover {
-  background: #fff;
-  color: #0e0205;
-  border-color: #fff;
-  box-shadow: 0 0 30px rgba(232, 0, 28, 0.4);
-  transform: translateY(-2px);
+.btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background-color: #ff3b2e;
+  transition: 0.5s ease;
 }
 
-.scroll-hint {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  opacity: 0.6;
-  animation: bounce 2s infinite;
+.btn:hover {
+  color: #fff;
+  transition-delay: 0.5s;
 }
 
-.scroll-hint__arrow {
-  font-size: 20px;
-  font-family: "Inter", sans-serif;
+.btn:hover::before {
+  width: 100%;
 }
 
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-8px); }
-  60% { transform: translateY(-4px); }
+.btn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 0;
+  width: 100%;
+  background-color: #ff3b2e;
+  transition: 0.4s ease;
+  z-index: -1;
+}
+
+.btn:hover::after {
+  height: 100%;
+  transition-delay: 0.4s;
+}
+
+@media (max-width: 768px) {
+  .hero-btn {
+    bottom: 20px;
+    left: 14px;
+    transform: scale(0.9);
+  }
 }
 
 /* =========================================================
@@ -767,7 +780,7 @@ body,
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #ff3b2e;
+  background: #fff;
   pointer-events: none;
   transform: translate(-50%, -50%);
   z-index: 9999;
@@ -778,7 +791,7 @@ body,
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1.5px solid #ff3b2e;
+  border: 1.5px solid #fff;
   pointer-events: none;
   transform: translate(-50%, -50%);
   z-index: 9998;
