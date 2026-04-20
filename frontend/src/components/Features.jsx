@@ -59,76 +59,59 @@ const Features = () => {
   const sectionRef    = useRef(null);
   const stickyRef     = useRef(null);
   const cardRefs      = useRef([]);
-  const transBarRef   = useRef(null);
+  const spotlightRef  = useRef(null);
   const labelRef      = useRef(null);
   const titleRef      = useRef(null);
   const lineRefs      = useRef([]);
 
   // ── Intersection Observer — entrance animations ──────────
   useEffect(() => {
-    const isMobile = () => window.innerWidth <= 768;
-
-    // 1. Transition bar sweep — fires when section top edge enters viewport
-    const barObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            transBarRef.current?.classList.add("sweep");
-            barObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0, rootMargin: "0px 0px -10% 0px" }
-    );
-    if (sectionRef.current) barObserver.observe(sectionRef.current);
-
-    // 2. Header curtain + card stagger — fires when sticky wrapper enters
-    const headerObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Eyebrow label
-            setTimeout(() => labelRef.current?.classList.add("fv-visible"), 200);
-            // Main title curtain
-            setTimeout(() => titleRef.current?.classList.add("fv-visible"), 400);
-            // Card 1 entrance (desktop: fade-in; mobile: fade-up)
-            setTimeout(() => cardRefs.current[0]?.classList.add("fv-card-in"), 600);
-            // Card entrance accent lines
-            lineRefs.current.forEach((line, i) => {
-              setTimeout(() => line?.classList.add("fv-line-draw"), 700 + i * 200);
-            });
-            headerObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-    if (stickyRef.current) headerObserver.observe(stickyRef.current);
-
-    // 3. Mobile: individual card fade-ups
-    let mobileObserver;
-    if (isMobile()) {
-      mobileObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("is-visible");
-              mobileObserver.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.15 }
-      );
-      cardRefs.current.forEach((card) => {
-        if (card) mobileObserver.observe(card);
-      });
-    }
-
-    return () => {
-      barObserver.disconnect();
-      headerObserver.disconnect();
-      if (mobileObserver) mobileObserver.disconnect();
+    // 1. Section Fade-in + Spotlight + Header elements
+    const observerOptions = {
+      threshold: 0.15,
+      rootMargin: "0px 0px -10% 0px"
     };
+
+    const mainObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // A. Section Fade-in
+          sectionRef.current?.classList.add("fv-section-visible");
+          
+          // B. Spotlight Expand (Radial light)
+          spotlightRef.current?.classList.add("spotlight-active");
+          
+          // C. Eyebrow "WHAT WE DO" fades up (0.2s delay)
+          setTimeout(() => labelRef.current?.classList.add("fv-visible"), 400);
+          
+          // D. Main title curtain reveal (0.4s delay)
+          setTimeout(() => titleRef.current?.classList.add("fv-visible"), 600);
+
+          // E. Description fade up (0.6s delay)
+          const desc = sectionRef.current?.querySelector(".features-description");
+          setTimeout(() => desc?.classList.add("fv-visible"), 800);
+
+          // F. Cards staggered entrance (on wrappers)
+          const wrappers = sectionRef.current?.querySelectorAll(".feature-card-wrapper");
+          wrappers?.forEach((wrapper, i) => {
+            const delay = 300 + i * 200;
+            setTimeout(() => wrapper.classList.add("fv-card-in"), delay);
+          });
+
+          // G. Vertical lines draw
+          lineRefs.current.forEach((line, i) => {
+            const delay = 500 + i * 200;
+            setTimeout(() => line?.classList.add("fv-line-draw"), delay);
+          });
+
+          mainObserver.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    if (stickyRef.current) mainObserver.observe(stickyRef.current);
+
+    return () => mainObserver.disconnect();
   }, []);
 
   // ── Scroll-scrubbed card stacking (desktop only) ─────────
@@ -207,10 +190,10 @@ const Features = () => {
       id="features"
       data-testid="features-section"
     >
-      {/* ── Red sweep transition bar ──────────────────────── */}
+      {/* ── Cinematic Spotlight Glow ────────────────────── */}
       <div
-        ref={transBarRef}
-        className="features-transition-bar"
+        ref={spotlightRef}
+        className="features-spotlight"
         aria-hidden="true"
       />
 
@@ -219,64 +202,80 @@ const Features = () => {
 
         {/* ── Section header ───────────────────────────── */}
         <div className="features-header">
-          {/* Eyebrow — fades up first */}
-          <p ref={labelRef} className="features-label fv-label">
-            OUR SERVICES
-          </p>
+          <div className="features-header__grid">
+            <div className="features-header__left">
+              {/* Eyebrow — fades up first */}
+              <p ref={labelRef} className="features-label fv-label">
+                WHAT WE DO
+              </p>
 
-          {/* Main title — curtain reveal */}
-          <div className="features-title-clip">
-            <h2 ref={titleRef} className="features-title fv-title">
-              What We Do
-            </h2>
+              {/* Main title — curtain reveal */}
+              <div className="features-title-clip">
+                <h2 ref={titleRef} className="features-title fv-title">
+                  Our Services
+                </h2>
+              </div>
+            </div>
+
+            <div className="features-header__right">
+              <p className="features-description fv-label" style={{ transitionDelay: "0.6s" }}>
+                We blend technical precision with creative intuition to build AI solutions that don't just work—they inspire. From roadmap planning to bespoke system architecture.
+              </p>
+            </div>
           </div>
         </div>
 
         {/* ── Card stack ───────────────────────────────── */}
         <div className="features-stack">
           {services.map((s, i) => (
-            <article
-              key={s.num}
-              ref={(el) => (cardRefs.current[i] = el)}
-              className={`feature-card feature-card--${i + 1}${i === 0 ? " fv-card-init" : ""}`}
-              data-testid={`feature-card-${i + 1}`}
-              style={i > 0 ? { transform: "translateY(100%)" } : {}}
-            >
-              {/* Red left-edge accent line — draws on entrance */}
-              <div
-                ref={(el) => (lineRefs.current[i] = el)}
-                className="feature-card__line"
-                aria-hidden="true"
-              />
+            <div key={`wrap-${s.num}`} className="feature-card-wrapper">
+              <article
+                ref={(el) => (cardRefs.current[i] = el)}
+                className={`feature-card feature-card--${i + 1} fv-card-init`}
+                data-testid={`feature-card-${i + 1}`}
+                style={i > 0 ? { transform: "translateY(100%)" } : {}}
+              >
+                {/* Red top border sweep */}
+                <div className="feature-card__top-sweep" aria-hidden="true" />
 
-              {/* Left: text content */}
-              <div className="feature-card__content">
-                <div className="feature-card__icon" aria-hidden="true">
-                  {s.icon}
+                {/* Left: text content */}
+                <div className="feature-card__content">
+                  <div className="feature-card__icon" aria-hidden="true">
+                    {s.icon}
+                  </div>
+                  <span className="feature-card__num" aria-hidden="true">
+                    {s.num}
+                  </span>
+                  <h3 className="feature-card__title">{s.title}</h3>
+                  <p className="feature-card__desc">{s.description}</p>
+                  <div className="feature-card__tags">
+                    {s.tags.map((tag) => (
+                      <span key={tag} className="feature-tag">{tag}</span>
+                    ))}
+                  </div>
                 </div>
-                <span className="feature-card__num" aria-hidden="true">
-                  {s.num}
-                </span>
-                <h3 className="feature-card__title">{s.title}</h3>
-                <p className="feature-card__desc">{s.description}</p>
-                <div className="feature-card__tags">
-                  {s.tags.map((tag) => (
-                    <span key={tag} className="feature-tag">{tag}</span>
-                  ))}
-                </div>
-              </div>
 
-              {/* Right: atmospheric image */}
-              <div className="feature-card__visual">
-                <img
-                  src={s.image}
-                  alt={s.title}
-                  className="feature-card__img"
-                  draggable={false}
+                {/* Right: atmospheric image */}
+                <div className="feature-card__visual">
+                  <img
+                    src={s.image}
+                    alt={s.title}
+                    className="feature-card__img"
+                    draggable={false}
+                  />
+                  <div className="feature-card__visual-overlay" aria-hidden="true" />
+                </div>
+              </article>
+
+              {/* Vertical Divider (between cards) */}
+              {i < services.length - 1 && (
+                <div 
+                  ref={(el) => (lineRefs.current[i] = el)}
+                  className="features-vertical-line" 
+                  aria-hidden="true" 
                 />
-                <div className="feature-card__visual-overlay" aria-hidden="true" />
-              </div>
-            </article>
+              )}
+            </div>
           ))}
         </div>
       </div>
