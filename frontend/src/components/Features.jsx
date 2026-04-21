@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import SoccerBallIllusion from "./SoccerBallIllusion";
 import "./Features.css";
 
 const services = [
@@ -199,6 +200,11 @@ const Features = () => {
 
       {/* ── Sticky viewport ──────────────────────────────── */}
       <div ref={stickyRef} className="features-sticky">
+        
+        {/* Soccer Ball Illusion Background */}
+        <div className="features-bg-animation">
+          <SoccerBallIllusion />
+        </div>
 
         {/* ── Section header ───────────────────────────── */}
         <div className="features-header">

@@ -1,23 +1,38 @@
 from fastapi import FastAPI, APIRouter
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import json
+import asyncio
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List
 import uuid
 from datetime import datetime, timezone
 
-
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+# Local JSON storage configuration
+DATA_FILE = ROOT_DIR / 'data.json'
+
+def init_db():
+    if not DATA_FILE.exists():
+        with open(DATA_FILE, 'w') as f:
+            json.dump({"status_checks": []}, f)
+
+init_db()
+
+async def read_data():
+    async with asyncio.Lock():
+        with open(DATA_FILE, 'r') as f:
+            return json.load(f)
+
+async def write_data(data):
+    async with asyncio.Lock():
+        with open(DATA_FILE, 'w') as f:
+            json.dump(data, f, indent=4)
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -28,7 +43,7 @@ api_router = APIRouter(prefix="/api")
 
 # Define Models
 class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
+    model_config = ConfigDict(extra="ignore")
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     client_name: str
@@ -47,17 +62,20 @@ async def create_status_check(input: StatusCheckCreate):
     status_dict = input.model_dump()
     status_obj = StatusCheck(**status_dict)
     
-    # Convert to dict and serialize datetime to ISO string for MongoDB
+    # Convert to dict and serialize datetime to ISO string
     doc = status_obj.model_dump()
     doc['timestamp'] = doc['timestamp'].isoformat()
     
-    _ = await db.status_checks.insert_one(doc)
+    data = await read_data()
+    data['status_checks'].append(doc)
+    await write_data(data)
+    
     return status_obj
 
 @api_router.get("/status", response_model=List[StatusCheck])
 async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
+    data = await read_data()
+    status_checks = data.get('status_checks', [])
     
     # Convert ISO string timestamps back to datetime objects
     for check in status_checks:
@@ -86,4 +104,4 @@ logger = logging.getLogger(__name__)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
-    client.close()
+    pass
