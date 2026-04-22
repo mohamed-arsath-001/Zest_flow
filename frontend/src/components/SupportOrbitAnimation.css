@@ -69,6 +69,17 @@
     --animation-state: paused;
     --avatar-opacity: 0.4;
   }
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: min(440px, 60cqi);
+    height: min(220px, 30cqi);
+    border-radius: 50%;
+    border: 0.5px solid rgba(200, 16, 46, 0.1);
+    pointer-events: none;
+    z-index: 0;
+  }
 }
 
 .support-card {
@@ -112,40 +123,60 @@
 
 .support-visual {
   aspect-ratio: 1;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 1e5px;
-  background: rgba(200, 16, 46, 0.08);
-  border: 0.5px solid rgba(200, 16, 46, 0.3);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: var(--avatar-opacity);
   transition: all 0.3s ease;
   overflow: visible;
-
-  &:hover {
-    box-shadow: 0 0 20px rgba(200, 16, 46, 0.3);
-  }
 }
 
 .icon-visual {
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  background: rgba(200, 16, 46, 0.1);
-  border: 0.5px solid rgba(200, 16, 46, 0.4);
+  background: rgba(200, 16, 46, 0.06);
+  border: 0.5px solid rgba(200, 16, 46, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
   transition: all 0.3s ease;
 }
 
-.icon-visual:hover {
+.icon-visual svg {
+  width: 28px;
+  height: 28px;
+}
+
+.icon-visual svg path,
+.icon-visual svg polyline,
+.icon-visual svg circle,
+.icon-visual svg line {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.support-avatar-link-wrapper:hover .icon-visual {
   background: rgba(200, 16, 46, 0.25);
   border-color: rgba(200, 16, 46, 0.8);
-  box-shadow: 0 0 30px rgba(200, 16, 46, 0.3);
+  box-shadow: 0 0 20px rgba(200, 16, 46, 0.2);
+}
+
+.support-avatar-link-wrapper:hover .icon-visual svg path,
+.support-avatar-link-wrapper:hover .icon-visual svg polyline,
+.support-avatar-link-wrapper:hover .icon-visual svg circle,
+.support-avatar-link-wrapper:hover .icon-visual svg line {
+  animation: redraw 0.8s ease forwards;
+}
+
+@keyframes redraw {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
 }
 
 .support-tooltiptext {
@@ -159,9 +190,9 @@
   translate: 110% 0;
   pointer-events: none;
   user-select: none;
-  background: var(--surface-2);
+  background: rgba(10, 2, 4, 0.95);
   padding: 12px;
-  border-radius: 12px;
+  border-radius: 4px;
   border: 0.5px solid rgba(200, 16, 46, 0.2);
   backdrop-filter: blur(8px);
   z-index: 10;
