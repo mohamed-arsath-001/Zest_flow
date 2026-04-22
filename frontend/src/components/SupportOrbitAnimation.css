@@ -1,0 +1,225 @@
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@property --direction {
+  syntax: '<number>';
+  initial-value: 1;
+  inherits: true;
+}
+
+.support-orbit-container {
+  --surface-1: transparent;
+  --surface-2: rgba(30, 3, 8, 0.8);
+  --text-1: #f5f0eb;
+  --accent: #c8102e;
+  
+  width: 100%;
+  height: 500px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  overflow: visible;
+}
+
+.section-wrapper {
+  display: grid;
+  place-items: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.orbit-center {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  z-index: 5;
+  animation: pulse-center 2s ease-in-out infinite;
+}
+
+@keyframes pulse-center {
+  0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(200,16,46,0.4); }
+  50% { transform: scale(1.2); opacity: 0.8; box-shadow: 0 0 0 12px rgba(200,16,46,0); }
+}
+
+.support-cards {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  grid-area: 1/1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  
+  --avatar-opacity: 1;
+  --avatar-img-scale: 1;
+  --tooltip-visibility: hidden;
+  --tooltip-opacity: 0;
+  --animation-state: running;
+
+  &:has(.support-avatar-link-wrapper:hover) {
+    --animation-state: paused;
+    --avatar-opacity: 0.4;
+  }
+}
+
+.support-card {
+  position: absolute;
+  grid-area: 1/1;
+  --radius: min(220px, 30cqi);
+  --offset-per-child: calc(360deg / (var(--nth-siblings) + 1));
+  --angle-offset: calc(var(--nth-child) * var(--offset-per-child));
+  --inline-ratio: 1/1;
+  --block-ratio: 1/2;
+
+  --direction: min(max(calc(cos((var(--angle) + var(--angle-offset))) * -100), -1), 1);
+
+  translate: calc(cos((var(--angle) + var(--angle-offset))) * var(--radius) * var(--inline-ratio))
+             calc(sin((var(--angle) + var(--angle-offset))) * var(--radius) * var(--block-ratio) * -1);
+
+  animation: adjust-angle linear 30s infinite reverse var(--animation-state);
+}
+
+@keyframes adjust-angle {
+  to {
+    --angle: 360deg;
+  }
+}
+
+.support-avatar-link-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text-1);
+  position: relative;
+
+  &:hover {
+    --avatar-img-scale: 1.1;
+    --avatar-opacity: 1;
+    --tooltip-opacity: 1;
+    --tooltip-visibility: visible;
+  }
+}
+
+.support-visual {
+  aspect-ratio: 1;
+  width: 100px;
+  height: 100px;
+  border-radius: 1e5px;
+  background: rgba(200, 16, 46, 0.08);
+  border: 0.5px solid rgba(200, 16, 46, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: var(--avatar-opacity);
+  transition: all 0.3s ease;
+  overflow: visible;
+
+  &:hover {
+    box-shadow: 0 0 20px rgba(200, 16, 46, 0.3);
+  }
+}
+
+.icon-visual {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(200, 16, 46, 0.1);
+  border: 0.5px solid rgba(200, 16, 46, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  transition: all 0.3s ease;
+}
+
+.icon-visual:hover {
+  background: rgba(200, 16, 46, 0.25);
+  border-color: rgba(200, 16, 46, 0.8);
+  box-shadow: 0 0 30px rgba(200, 16, 46, 0.3);
+}
+
+.support-tooltiptext {
+  position: absolute;
+  display: grid;
+  gap: 4px;
+  width: 200px;
+  opacity: var(--tooltip-opacity);
+  visibility: var(--tooltip-visibility);
+  transition: all 0.3s ease;
+  translate: 110% 0;
+  pointer-events: none;
+  user-select: none;
+  background: var(--surface-2);
+  padding: 12px;
+  border-radius: 12px;
+  border: 0.5px solid rgba(200, 16, 46, 0.2);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+
+/* Adjust direction based on --direction */
+.support-card[style*="--direction: -1"] .support-tooltiptext {
+  text-align: end;
+  translate: -110% 0;
+}
+
+.team-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  margin: 0;
+  color: var(--text-1);
+  letter-spacing: 1px;
+}
+
+.team-title {
+  color: var(--accent);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.team-bio {
+  color: rgba(245, 240, 235, 0.5);
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.85rem;
+  margin: 4px 0 0 0;
+  line-height: 1.3;
+}
+
+@media (width < 1024px) {
+  .support-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    height: auto;
+    padding: 40px;
+  }
+  
+  .support-card {
+    position: relative;
+    translate: none;
+    animation: none;
+  }
+  
+  .support-tooltiptext {
+    position: relative;
+    translate: none;
+    opacity: 1;
+    visibility: visible;
+    margin-top: 10px;
+    width: 100%;
+  }
+}

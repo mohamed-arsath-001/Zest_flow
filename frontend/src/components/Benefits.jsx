@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Benefits.css';
+import FrictionlessExecutionAnimation from './FrictionlessExecutionAnimation';
+import ROIChartAnimation from './ROIChartAnimation';
+import NeuralNetworkAnimation from './NeuralNetworkAnimation';
+import SupportOrbitAnimation from './SupportOrbitAnimation';
 
 const benefits = [
   {
@@ -40,7 +44,7 @@ const benefits = [
   },
   {
     id: "04",
-    headline: "Plugs In. Doesn't Break Things.",
+    headline: "Frictionless Execution",
     body: "No months of onboarding. No ripping out what already works. We build around your existing stack so your team hits the ground running from day one.",
     tags: ["Seamless", "Integration", "Native"],
     image: "/benefits/execution.png",
@@ -68,9 +72,9 @@ const Counter = ({ target, isVisible }) => {
         const progress = timestamp - startTime;
         const p = Math.min(progress / duration, 1);
         const easeOutQuad = (t) => t * (2 - t);
-        
+
         setCount(Math.floor(easeOutQuad(p) * end));
-        
+
         if (p < 1) {
           requestAnimationFrame(animate);
         } else {
@@ -106,27 +110,27 @@ const BenefitRow = ({ benefit, index, scrollProgress }) => {
   const isEven = index % 2 === 1;
 
   return (
-    <div 
-      ref={rowRef} 
+    <div
+      ref={rowRef}
       className={`benefit-row ${isEven ? 'benefit-row--reverse' : ''}`}
     >
       {benefit.svg}
 
-      <div 
+      <div
         className={`benefit-content ${isVisible ? 'animate-magnetic' : ''}`}
         style={{ '--slide-offset': isEven ? '150px' : '-150px' }}
       >
         <div className="benefit-number">
           <Counter target={benefit.id} isVisible={isVisible} />
         </div>
-        
+
         <h2 className="benefit-headline">{benefit.headline}</h2>
         <p className="benefit-body">{benefit.body}</p>
-        
+
         <div className="benefit-tags">
           {benefit.tags.map((tag, i) => (
-            <span 
-              key={tag} 
+            <span
+              key={tag}
               className={`benefit-tag ${isVisible ? 'animate-pop' : ''}`}
               style={{ animationDelay: `${0.4 + i * 0.1}s` }}
             >
@@ -137,13 +141,23 @@ const BenefitRow = ({ benefit, index, scrollProgress }) => {
       </div>
 
       <div className={`benefit-visual ${isVisible ? 'animate-sweep' : ''}`}>
-        <div 
-          className={`benefit-visual-inner ${isVisible ? 'animate-wipe' : ''}`}
-          style={{ backgroundImage: `url(${benefit.image})` }}
-        />
+        {index === 0 ? (
+          <ROIChartAnimation />
+        ) : index === 1 ? (
+          <NeuralNetworkAnimation />
+        ) : index === 2 ? (
+          <SupportOrbitAnimation />
+        ) : index === 3 ? (
+          <FrictionlessExecutionAnimation />
+        ) : (
+          <div
+            className={`benefit-visual-inner ${isVisible ? 'animate-wipe' : ''}`}
+            style={{ backgroundImage: `url(${benefit.image})` }}
+          />
+        )}
         {isVisible && benefit.svg.props.children.props.className === "benefit-svg-path" && (
-           /* Trigger SVG draw by adding class */
-           null
+          /* Trigger SVG draw by adding class */
+          null
         )}
       </div>
 
@@ -169,7 +183,7 @@ const Benefits = () => {
       const sectionHeight = rect.height;
       const scrollPos = -rect.top;
       const viewHeight = window.innerHeight;
-      
+
       const p = Math.min(Math.max(scrollPos / (sectionHeight - viewHeight), 0), 1);
       setProgress(p);
     };
@@ -181,17 +195,17 @@ const Benefits = () => {
   return (
     <section ref={sectionRef} className="benefits-section" id="benefits">
       <div className="benefits-progress-line">
-        <div 
-          className="benefits-progress-fill" 
+        <div
+          className="benefits-progress-fill"
           style={{ transform: `scaleY(${progress})` }}
         />
       </div>
 
       {benefits.map((benefit, i) => (
-        <BenefitRow 
-          key={benefit.id} 
-          benefit={benefit} 
-          index={i} 
+        <BenefitRow
+          key={benefit.id}
+          benefit={benefit}
+          index={i}
         />
       ))}
     </section>

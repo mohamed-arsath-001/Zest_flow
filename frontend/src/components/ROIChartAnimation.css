@@ -1,0 +1,69 @@
+.roi-chart-container {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  position: relative;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, rgba(200,16,46,0.08) 0%, transparent 70%);
+}
+
+/* Background dots simulation */
+.roi-chart-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(rgba(200, 16, 46, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+.chart {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart svg {
+  width: 100%;
+  height: 100%;
+  max-width: 560px;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
+}
+
+@keyframes raise {
+  0%   { transform: scaleY(0.01); opacity: 0.3; }
+  40%  { transform: scaleY(1.05); opacity: 1; }
+  60%  { transform: scaleY(1); opacity: 1; }
+  85%  { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(0.01); opacity: 0.3; }
+}
+
+.dataset {
+  transform-origin: bottom;
+  transform: scaleY(0.01);
+  opacity: 0.3;
+  animation: raise 4s ease-in-out infinite;
+}
+
+#roi-dataset-1 { 
+  fill: #c8102e;
+  animation-delay: 0.4s; 
+}
+
+#roi-dataset-2 { 
+  fill: #8b0a1f;
+  animation-delay: 0.2s; 
+}
+
+#roi-dataset-3 { 
+  fill: rgba(200, 16, 46, 0.4);
+  animation-delay: 0s; 
+}
