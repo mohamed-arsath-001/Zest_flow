@@ -1,0 +1,96 @@
+.cta-section {
+  background-color: var(--bg);
+  padding: 160px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(circle, rgba(200, 16, 46, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cta-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 40px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.cta-headline {
+  font-family: var(--bebas);
+  font-size: clamp(52px, 7vw, 96px);
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.cta-subtext {
+  font-family: var(--serif);
+  font-size: clamp(22px, 3vw, 32px);
+  color: var(--muted);
+  font-style: italic;
+  margin: 0 0 20px 0;
+}
+
+.cta-button {
+  display: inline-block;
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--white);
+  font-family: var(--body);
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 20px 40px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s ease;
+  cursor: none; /* Due to custom cursor */
+}
+
+.cta-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+  z-index: -1;
+}
+
+.cta-button:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+@media (max-width: 768px) {
+  .cta-container {
+    padding: 0 20px;
+  }
+
+  .cta-section {
+    padding: 100px 0;
+  }
+}

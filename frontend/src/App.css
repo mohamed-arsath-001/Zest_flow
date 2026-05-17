@@ -5,6 +5,7 @@
    — Playfair Display italic: "Together" accent
    ========================================================= */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,700;1,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&family=Playfair+Display:ital,wght@1,500;1,700&family=Parisienne&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap');
 
 /* =========================================================
    Reset
@@ -14,6 +15,16 @@
 *::after {
   box-sizing: border-box;
   cursor: none !important;
+}
+
+:root {
+  --bg: #0e0205;
+  --accent: #c8102e;
+  --white: #f5f0eb;
+  --muted: rgba(245,240,235,0.45);
+  --bebas: 'Bebas Neue', sans-serif;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --body: 'Barlow', sans-serif;
 }
 
 html,

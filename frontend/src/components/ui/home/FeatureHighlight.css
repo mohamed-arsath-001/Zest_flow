@@ -1,0 +1,111 @@
+.feature-highlight {
+  background-color: var(--bg);
+  padding: 120px 0;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(245, 240, 235, 0.05);
+}
+
+.feature-highlight-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.feature-highlight-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.feature-highlight-headline {
+  font-family: var(--bebas);
+  font-size: clamp(48px, 6vw, 84px);
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.feature-highlight-body {
+  font-family: var(--serif);
+  font-size: clamp(20px, 2vw, 28px);
+  color: var(--muted);
+  line-height: 1.4;
+  font-style: italic;
+  margin: 0;
+  max-width: 600px;
+}
+
+.feature-highlight-graphic {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.animated-graphic {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+}
+
+.spin-slow {
+  transform-origin: center;
+  animation: spin 20s linear infinite;
+}
+
+.spin-fast-reverse {
+  transform-origin: center;
+  animation: spin 10s linear infinite reverse;
+}
+
+.pulse {
+  transform-origin: center;
+  animation: pulseOpacity 4s ease-in-out infinite alternate;
+}
+
+.float-anim {
+  transform-origin: center;
+  animation: floatPath 6s ease-in-out infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseOpacity {
+  0% { opacity: 0.05; transform: scale(0.9); }
+  100% { opacity: 0.2; transform: scale(1.1); }
+}
+
+@keyframes floatPath {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+@media (max-width: 992px) {
+  .feature-highlight-container {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .feature-highlight-graphic {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .feature-highlight-container {
+    padding: 0 20px;
+  }
+
+  .feature-highlight {
+    padding: 80px 0;
+  }
+}
